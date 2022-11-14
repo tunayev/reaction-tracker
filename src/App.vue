@@ -3,25 +3,35 @@
   <button @click="start" class="mt-5 bg-green-300" :disabled="started">
     Start!
   </button>
-  <Block v-if="started" :delay="delay" />
+  <Block v-if="started" :delay="delay" @end="endGame" />
+  <Results v-if="showResults" :score="score" />
 </template>
 
 <script>
+import Results from "./components/Results.vue";
 import Block from "./components/Block.vue";
 export default {
-  components: { Block },
+  components: { Block, Results },
   name: "App",
-  methods: {
-    start() {
-      this.started = true;
-      this.delay = 1000 + Math.random() * 4000;
-    },
-  },
   data() {
     return {
       started: false,
       delay: null,
+      score: null,
+      showResults: false,
     };
+  },
+  methods: {
+    start() {
+      this.started = true;
+      this.delay = 1000 + Math.random() * 4000;
+      this.showResults = false;
+    },
+    endGame(reactionTime) {
+      this.score = reactionTime;
+      this.started = false;
+      this.showResults = true;
+    },
   },
 };
 </script>
